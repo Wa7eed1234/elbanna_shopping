@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .product-list {
+            padding: 20px;
+        }
+
+        .product-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .product-list li {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .product-list h3 {
+            margin-top: 0;
+        }
+
+        .product-list p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Our Store</h1>
+    </header>
+
+    <div class="product-list">
+        {% if products %}
+            <ul>
+                {% for product in products %}
+                    <li>
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description }}</p>
+                        <p>Price: ${{ product.price }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No products available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

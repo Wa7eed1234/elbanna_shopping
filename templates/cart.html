@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .cart-item img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .cart-item-info h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .cart-item-info p {
+            margin: 5px 0;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .empty-cart {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+
+    <h2>Your Cart</h2>
+    {% if cart_items %}
+        {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ item.product.image }}" alt="{{ item.product.name }}">
+                <div class="cart-item-info">
+                    <h3>{{ item.product.name }}</h3>
+                    <p>Description: {{ item.product.description }}</p>
+                    <p>Price: ${{ item.product.price }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                </div>
+                <div class="cart-item-actions">
+                    <a href="{{ url_for('remove_from_cart', item_id=item.id) }}" class="btn">Remove</a>
+                </div>
+            </div>
+        {% endfor %}
+        <a href="{{ url_for('checkout') }}" class="btn">Proceed to Checkout</a>
+    {% else %}
+        <p class="empty-cart">Your cart is empty.</p>
+    {% endif %}
+{% endblock %}

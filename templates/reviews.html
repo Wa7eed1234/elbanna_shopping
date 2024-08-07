@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .review-container {
+            margin-top: 20px;
+        }
+
+        .review-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .review-list li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-date {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .review-form {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <h2>Reviews for {{ product.name }}</h2>
+
+    <ul class="review-list">
+        {% for review in reviews %}
+            <li>
+                <div class="review-header">
+                    <span>{{ review.user.username }} - {{ review.rating }} stars</span>
+                    <span class="review-date">{{ review.created_at.strftime('%Y-%m-%d') }}</span>
+                </div>
+                <p>{{ review.comment }}</p>
+            </li>
+        {% else %}
+            <li>No reviews yet. Be the first to review!</li>
+        {% endfor %}
+    </ul>
+
+    <div class="review-form">
+        <h3>Add a Review</h3>
+        <form action="{{ url_for('add_review', product_id=product.id) }}" method="post">
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" name="rating" id="rating" min="1" max="5" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment:</label>
+                <textarea name="comment" id="comment" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn">Submit Review</button>
+        </form>
+    </div>
+{% endblock %}

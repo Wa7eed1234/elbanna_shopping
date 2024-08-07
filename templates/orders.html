@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff; /* Set the background to white */
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Make body take full viewport height */
+        }
+
+        header {
+            background-color: #fff; /* Set the background to white */
+            color: #333; /* Change text color for contrast */
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            border-bottom: 1px solid #ddd; /* Add a border for separation */
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            background-color: #333; /* Darker background for the nav */
+            color: #fff;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 50px;
+            z-index: 999; /* Ensure it stays on top of the content */
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: #444; /* Slightly lighter hover effect */
+        }
+
+        .content {
+            margin-top: 100px; /* Adjust margin to make space for fixed header and nav */
+            padding: 20px;
+            width: 100%;
+            height: calc(100vh - 140px); /* Adjust height to fit the content area */
+            overflow-y: auto; /* Allow scrolling within content area */
+        }
+
+        .order-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .order-list li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .order-date {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .order-items {
+            margin-top: 10px;
+        }
+
+        .order-item {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        .order-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .order-total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .update-time-form {
+            margin-top: 10px;
+        }
+
+        .update-time-form input[type="datetime-local"] {
+            margin-right: 10px;
+        }
+
+        .update-time-form button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .update-time-form button:hover {
+            background-color: #444;
+        }
+
+        footer {
+            background-color: #fff; /* Set the background to white */
+            color: #333; /* Change text color for contrast */
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            border-top: 1px solid #ddd; /* Add a border for separation */
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Orders</h1>
+    </header>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Cart</a>
+        <a href="#">Profile</a>
+        <a href="#">Logout</a>
+    </nav>
+    <div class="content">
+        <ul class="order-list">
+            {% if orders %}
+                {% for order in orders %}
+                    <li>
+                        <div class="order-header">
+                            <span>Order #{{ order.id }}</span>
+                            <span class="order-date">{{ order.date }}</span>
+                        </div>
+                        <div class="order-details">
+                            <p><strong>Customer:</strong> {{ user.username }}</p>
+                            <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+                            <p><strong>Delivery Address:</strong> {{ order.address }}</p>
+                        </div>
+                        <div class="order-items">
+                            {% for item in order.items %}
+                            <div class="order-item">
+                                <img src="{{ item.image_url }}" alt="{{ item.product_name }}">
+                                <div>
+                                    <p>{{ item.product_name }} (x{{ item.quantity }}) - ${{ item.price }}</p>
+                                    <p><strong>Color:</strong> {{ item.color }}</p>
+                                    <p><strong>Size:</strong> {{ item.size }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="order-total">
+                            Total: ${{ order.total }}
+                        </div>
+                        <!-- If the user is a seller, show the update delivery time form -->
+                        {% if user.is_seller %}
+                        <form class="update-time-form" action="/update_order_time/{{ order.id }}" method="POST">
+                            <input type="datetime-local" name="delivery_time">
+                            <button type="submit">Update Delivery Time</button>
+                        </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No orders found.</li> <!-- Placeholder when no orders are present -->
+            {% endif %}
+        </ul>
+    </div>
+    <footer>
+        <p>&copy; 2024 Elbanna Online Shop</p>
+    </footer>
+</body>
+</html>

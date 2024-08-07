@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        /* CSS Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .order-item, .review-item, .product-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .order-item h3, .review-item h3, .product-item h3 {
+            margin: 0;
+        }
+
+        .product-image {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <main>
+        <h2>Orders</h2>
+        {% for order in orders %}
+        <div class="order-item">
+            <h3>Order #{{ order.id }}</h3>
+            <p>User: {{ order.user.username }}</p>
+            <p>Total: ${{ order.total_price }}</p>
+            <p>Status: {{ order.status }}</p>
+            <ul>
+                {% for item in order.order_items %}
+                <li>{{ item.product.name }} (Quantity: {{ item.quantity }})</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+        {% endfor %}
+
+        <h2>Reviews</h2>
+        {% for review in reviews %}
+        <div class="review-item">
+            <h3>{{ review[4] }}</h3>
+            <p>User: {{ review[3] }}</p>
+            <p>Price: ${{ review[5] }}</p>
+            <p>Rating: {{ review[1] }}</p>
+            <p>Comment: {{ review[2] }}</p>
+        </div>
+        {% endfor %}
+
+        <h2>All Products</h2>
+        {% for product in products %}
+        <div class="product-item">
+            <h3>{{ product.name }}</h3>
+            <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+            <p>Description: {{ product.description }}</p>
+            <p>Price: ${{ product.price }}</p>
+            <p>Category: {{ product.category }}</p>
+            <p>Stock: {{ product.stock }}</p>
+            <!-- Like Button -->
+            <button onclick="likeProduct('{{ product.id }}')">Like</button>
+            <span id="like-count-{{ product.id }}">0 Likes</span>
+        </div>
+        {% endfor %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Elbanna Online Shop</p>
+    </footer>
+
+    <script>
+        // JavaScript to handle like button click
+        function likeProduct(productId) {
+            const likeCountElement = document.getElementById(`like-count-${productId}`);
+            let currentLikes = parseInt(likeCountElement.textContent);
+            likeCountElement.textContent = `${currentLikes + 1} Likes`;
+            // Here you would typically send an AJAX request to update likes in the backend
+        }
+    </script>
+</body>
+</html>
